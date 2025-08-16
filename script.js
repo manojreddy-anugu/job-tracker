@@ -25,7 +25,7 @@ let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 
 function renderJobs() {
   jobsTableBody.innerHTML = "";
-  const selectedFilter = filter.value; // new filter logic
+  const selectedFilter = filter.value; // filter still works
 
   jobs
     .filter(job => selectedFilter === "All" || job.status === selectedFilter)
@@ -37,6 +37,7 @@ function renderJobs() {
           <td>${job.dateApplied}</td>
           <td>${job.status}</td>
           <td>
+            <button onclick="editJob(${index})">Edit</button>
             <button onclick="deleteJob(${index})">Delete</button>
           </td>
         </tr>
@@ -64,6 +65,23 @@ form.addEventListener("submit", (e) => {
   renderJobs();
   form.reset();
 });
+
+// edit jobs
+function editJob(index) {
+  const job = jobs[index];
+
+  // Pre-fill form with job details
+  document.getElementById("company").value = job.company;
+  document.getElementById("position").value = job.position;
+  document.getElementById("dateApplied").value = job.dateApplied;
+  document.getElementById("status").value = job.status;
+
+  // Remove the old job so new one replaces it
+  jobs.splice(index, 1);
+  localStorage.setItem("jobs", JSON.stringify(jobs));
+  renderJobs();
+}
+
 
 // Delete job
 function deleteJob(index) {
