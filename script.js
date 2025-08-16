@@ -1,27 +1,55 @@
 const form = document.getElementById("addJobForm");
 const jobsTableBody = document.getElementById("jobsTableBody");
 
+
 // Load jobs from LocalStorage
 let jobs = JSON.parse(localStorage.getItem("jobs")) || [];
 
+// function renderJobs() {
+//   jobsTableBody.innerHTML = "";
+//   jobs.forEach((job, index) => {
+//     const row = `
+//       <tr>
+//         <td>${job.company}</td>
+//         <td>${job.position}</td>
+//         <td>${job.dateApplied}</td>
+//         <td>${job.status}</td>
+//         <td>
+//           <button onclick="deleteJob(${index})">Delete</button>
+//         </td>
+//       </tr>
+//     `;
+//     jobsTableBody.innerHTML += row;
+//   });
+// }
+
 function renderJobs() {
-    jobsTableBody.innerHTML = "";
-    jobs.forEach((job, index) => {
-        const row = `
-  <tr>
-    <td>${job.company}</td>
-    <td>${job.position}</td>
-    <td>${job.dateApplied}</td>
-    <td>${job.status}</td>
-    <td>
-      <button onclick="editJob(${index})">Edit</button>
-      <button onclick="deleteJob(${index})">Delete</button>
-    </td>
-  </tr>
-`;
-        jobsTableBody.innerHTML += row;
+  jobsTableBody.innerHTML = "";
+  const selectedFilter = filter.value; // filter still works
+
+  jobs
+    .filter(job => selectedFilter === "All" || job.status === selectedFilter)
+    .forEach((job, index) => {
+      const row = `
+        <tr>
+          <td>${job.company}</td>
+          <td>${job.position}</td>
+          <td>${job.dateApplied}</td>
+          <td>${job.status}</td>
+          <td>
+            <button onclick="editJob(${index})">Edit</button>
+            <button onclick="deleteJob(${index})">Delete</button>
+          </td>
+        </tr>
+      `;
+      jobsTableBody.innerHTML += row;
     });
 }
+
+
+
+// Filter event
+filter.addEventListener("change", renderJobs);
 
 // Add new job
 form.addEventListener("submit", (e) => {
